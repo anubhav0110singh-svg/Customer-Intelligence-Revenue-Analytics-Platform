@@ -1,119 +1,48 @@
-# Data Pipeline Documentation
+# Dataset Source
 
-## Overview
+## Dataset Name
 
-This project uses Microsoft Fabric and a Medallion Architecture to process customer churn data through Bronze, Silver, and Gold layers.
-
-## Pipeline Architecture
-
-Raw CSV
-    ↓
-Lakehouse Files
-    ↓
-Dataflow Gen2
-    ↓
-Bronze Layer
-    ↓
-Dataflow Gen2
-    ↓
-Silver Layer
-    ↓
-Gold Layer
-    ↓
-Power BI Dashboard
-
----
-
-# Bronze Layer
-
-## Table
-
-`bronze_customer`
+Telco Customer Churn Dataset
 
 ## Source
 
-WA_Fn-UseC_-Telco-Customer-Churn.csv
+The dataset used in this project is the IBM Telco Customer Churn dataset.
 
-## Storage
+## Description
 
-Microsoft Fabric Lakehouse:
+The dataset contains customer information from a telecommunications company, including demographic information, account details, subscribed services, monthly charges, total charges, and customer churn status.
 
-`customer_intelligence_lakehouse`
+Each row represents one customer.
 
-## Ingestion Tool
+## Key Business Use
 
-Microsoft Fabric Dataflow Gen2
+The dataset is used to analyze:
 
-## Bronze Layer Approach
+- Customer churn patterns
+- Customer segments
+- Contract types
+- Service usage
+- Monthly and total charges
+- Revenue exposure
+- High-risk customers
 
-The Bronze layer preserves the ingested source data with minimal transformation.
+## Dataset File
 
-The first row of the CSV was promoted as column headers before loading the data into the Lakehouse.
+`WA_Fn-UseC_-Telco-Customer-Churn.csv`
 
----
+## Usage in This Project
 
-# Silver Layer
-
-## Table
-
-`silver_customer`
-
-## Source
-
-`bronze_customer`
-
-## Transformation Tool
-
-Microsoft Fabric Dataflow Gen2
-
-## Data Quality Transformations
-
-### TotalCharges Missing Values
-
-Approximately 1% of the `TotalCharges` values were empty.
-
-The corresponding customer records had a `tenure` value of `0`, indicating that these customers had not yet accumulated historical charges.
-
-The missing `TotalCharges` values were replaced with `0`.
-
-### Customer ID Validation
-
-The `customerID` column was validated and found to be:
-
-- 100% distinct
-- 100% unique
-
-Therefore, no duplicate customer records were found.
-
-### Data Types
-
-All column data types were reviewed and validated.
-
-### Null and Error Validation
-
-After cleaning, the dataset contained:
-
-- No remaining null values
-- No data errors
-
-### Categorical Values
-
-Values such as:
-
-- `No phone service`
-- `No internet service`
-
-were preserved because they represent different business situations from a simple `No`.
-
----
-
-# Current Pipeline
+The dataset is used as the raw source for the Microsoft Fabric Lakehouse pipeline.
 
 ```text
 Raw CSV
    ↓
-bronze_customer
+Lakehouse Files
    ↓
-Data Cleaning and Validation
+Bronze Layer
    ↓
-silver_customer
+Silver Layer
+   ↓
+Gold Layer
+   ↓
+Power BI Dashboard
